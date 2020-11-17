@@ -4,15 +4,34 @@ import axios from 'axios';
 import './App.css';
 
 class App extends React.Component {
-    state = {
-        advice:''
-    }
+    state = { advice: '' }
+    
     componentDidMount() {
-        console.log('COMPONENT DID MOUNT');
+        this.fetchAdvice();
     }
+
+    fetchAdvice = () => {
+        axios.get('https://api.adviceslip.com/advice')
+            .then((response) => {
+                const { advice } = response.data.slip
+                this.setState({advice})
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
+    }
+
     render() {
+        const { advice } = this.state;
         return(
-          <h1>APP</h1>  
+            <div className="app">
+                <div className="card">
+                    <h1 className="heading">{advice}</h1>
+                    <button className="button" onClick={this.fetchAdvice}>
+                        <span>SHOW ME NEW</span>
+                    </button>
+                </div>
+            </div> 
         );
     }
 }
